@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+*.db
+*.db-journal
+uploads
+.env
+.env.local
+.DS_Store
+plan.md
+README.md

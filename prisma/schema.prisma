@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  role      Role     @default(OWNER)
+  createdAt DateTime @default(now())
+  ownedEvents Event[] @relation("EventOwner")
+  adminEvents EventAdmin[]
+}
+
+model Event {
+  id               String      @id @default(cuid())
+  name             String
+  coupleName       String
+  startDate        DateTime
+  endDate          DateTime
+  timezone         String
+  status           EventStatus @default(DRAFT)
+  qrToken          String      @unique
+  maxSessions      Int         @default(3)
+  maxPhotos        Int         @default(4)
+  capacity         Int         @default(1000)
+  retentionDays    Int         @default(90)
+  galleryEnabled   Boolean     @default(false)
+  slideshowEnabled Boolean     @default(false)
+  gallerySlug      String?     @unique
+  galleryToken     String?     @unique
+  createdAt        DateTime    @default(now())
+  owner            User        @relation("EventOwner", fields: [ownerId], references: [id])
+  ownerId          String
+  admins           EventAdmin[]
+  guestSessions    GuestSession[]
+  photos           Photo[]
+  auditRecords     AuditRecord[]
+}
+
+model EventAdmin {
+  id           String    @id @default(cuid())
+  userId       String
+  eventId      String
+  invitedAt    DateTime  @default(now())
+  joinedAt     DateTime?
+  inviteToken  String?   @unique
+  inviteExpiry DateTime?
+  user         User      @relation(fields: [userId], references: [id])
+  event        Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+}
+
+model GuestSession {
+  id            String   @id @default(cuid())
+  eventId       String
+  nickname      String?
+  sessionToken  String   @unique
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  photoSessions PhotoSession[]
+}
+
+model PhotoSession {
+  id             String   @id @default(cuid())
+  guestSessionId String
+  consentGiven   Boolean  @default(false)
+  consentVersion String?
+  consentedAt    DateTime?
+  createdAt      DateTime @default(now())
+  guestSession   GuestSession @relation(fields: [guestSessionId], references: [id], onDelete: Cascade)
+  photos         Photo[]
+}
+
+model Photo {
+  id             String      @id @default(cuid())
+  photoSessionId String
+  eventId        String
+  filename       String
+  originalPath   String
+  optimizedPath  String
+  status         PhotoStatus @default(PENDING)
+  approvedAt     DateTime?
+  hiddenAt       DateTime?
+  deletedAt      DateTime?
+  createdAt      DateTime    @default(now())
+  photoSession   PhotoSession @relation(fields: [photoSessionId], references: [id], onDelete: Cascade)
+  event          Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model AuditRecord {
+  id         String   @id @default(cuid())
+  eventId    String
+  actorId    String?
+  action     String
+  objectType String
+  objectId   String
+  metadata   String?
+  createdAt  DateTime @default(now())
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model MagicLink {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+model AdminInvite {
+  id        String   @id @default(cuid())
+  email     String
+  eventId   String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  OWNER
+  ADMIN
+}
+
+enum EventStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+  EXPIRED
+}
+
+enum PhotoStatus {
+  PENDING
+  APPROVED
+  HIDDEN
+  DELETED
+}

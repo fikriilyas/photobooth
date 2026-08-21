@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #be185d;
+    --color-primary-hover: #9d174d;
+    --color-primary-light: #fce7f3;
+    --color-primary-50: #fdf2f8;
+    --color-accent: #a16207;
+    --color-accent-light: #fef3c7;
+    --color-surface: #ffffff;
+    --color-surface-muted: #faf8f6;
+    --color-background: #f8f6f4;
+    --color-foreground: #1c1917;
+    --color-foreground-muted: #57534e;
+    --color-border: #e7e0db;
+    --color-border-light: #f0ebe6;
+    --color-destructive: #dc2626;
+    --color-destructive-hover: #b91c1c;
+    --color-success: #16a34a;
+    --color-success-light: #dcfce7;
+    --color-warning: #d97706;
+    --color-warning-light: #fef3c7;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[var(--color-border)];
+  }
+
+  body {
+    @apply bg-[var(--color-background)] text-[var(--color-foreground)] antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border bg-white shadow-sm;
+  }
+
+  .card-elevated {
+    @apply rounded-xl border bg-white shadow-md;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-[var(--color-primary-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-[var(--color-border)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--color-foreground)] transition-colors duration-200 hover:bg-[var(--color-surface-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-destructive {
+    @apply inline-flex items-center justify-center rounded-lg bg-[var(--color-destructive)] px-4 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-[var(--color-destructive-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-destructive)] focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--color-foreground-muted)] transition-colors duration-200 hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-foreground)] transition-colors duration-200 focus:border-[var(--color-primary)] focus:outline-none;
+  }
+
+  .input-field::placeholder {
+    color: color-mix(in srgb, var(--color-foreground-muted) 50%, transparent);
+  }
+
+  .input-field:focus {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply badge bg-[var(--color-success-light)] text-[var(--color-success)];
+  }
+
+  .badge-warning {
+    @apply badge bg-[var(--color-warning-light)] text-[var(--color-warning)];
+  }
+
+  .badge-destructive {
+    @apply badge bg-red-100 text-[var(--color-destructive)];
+  }
+
+  .badge-neutral {
+    @apply badge bg-stone-100 text-stone-600;
+  }
+
+  .badge-primary {
+    @apply badge bg-[var(--color-primary-light)] text-[var(--color-primary)];
+  }
+
+  .page-header {
+    @apply mb-6;
+  }
+
+  .page-title {
+    @apply text-2xl font-semibold tracking-tight text-[var(--color-foreground)];
+  }
+
+  .section-title {
+    @apply text-base font-semibold text-[var(--color-foreground)];
+  }
+
+  .back-link {
+    @apply inline-flex items-center gap-1.5 text-sm text-[var(--color-foreground-muted)] transition-colors duration-200 hover:text-[var(--color-foreground)];
+  }
+
+  .link {
+    @apply text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-primary-hover)] hover:underline;
+  }
+}
+
+@layer utilities {
+  .transition-default {
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
